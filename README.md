@@ -1,20 +1,30 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Student Card Maker
 
-# Run and deploy your AI Studio app
+Student Card Maker is a React + TypeScript app for designing and exporting student ID cards.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/f0fd58c8-e4d6-4e6c-a5f8-36c4c4cee036
+- Three card templates: modern, classic, and minimal
+- Editable institution, student, and contact details
+- Upload logo, student photo, and signature
+- Theme color selection for card styling
+- Live preview of front and back sides
+- Download both sides as PNG images with barcode support
 
-## Run Locally
+## Quick Start
 
-**Prerequisites:**  Node.js
+Prerequisite: Node.js 18+
 
+```bash
+npm install
+npm run dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Open http://localhost:3000 in your browser.
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
