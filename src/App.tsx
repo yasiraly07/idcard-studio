@@ -78,7 +78,7 @@ const Section = ({ title, icon: Icon, children }: any) => (
 const Detail = ({ label, value }: { label: string, value: string }) => (
   <div className="overflow-hidden">
     <p className="text-[9px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">{label}</p>
-    <p className="text-xs font-bold text-slate-700 truncate">{value}</p>
+    <p className="text-xs font-bold text-slate-700 break-words whitespace-normal">{value}</p>
   </div>
 );
 
