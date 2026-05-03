@@ -146,6 +146,7 @@ const Detail = ({ label, value }: { label: string; value: string }) => (
 export default function App() {
   const [data, setData] = useState<StudentData>(DEFAULT_DATA);
   const [showBack, setShowBack] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'edit' | 'preview'>('edit');
   const [openSections, setOpenSections] = useState({
     design: true,
     institution: true,
@@ -195,16 +196,20 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col lg:flex-row overflow-hidden" style={{ height: '100vh' }}>
+    <div className="bg-slate-50 text-slate-900 font-sans flex flex-col lg:flex-row" style={{ height: '100dvh' }}>
 
       {/* ── Left Sidebar ── */}
-      <aside className="w-full lg:w-[360px] xl:w-[400px] shrink-0 bg-white border-r border-slate-100 flex flex-col shadow-sm overflow-hidden">
+      <aside className={`
+        lg:w-[360px] xl:w-[400px] shrink-0 bg-white border-r border-slate-100 flex flex-col shadow-sm
+        ${mobileTab === 'edit' ? 'flex' : 'hidden'} lg:flex
+        flex-1 lg:flex-none min-h-0
+      `}>
 
         {/* Header */}
-        <div className="px-5 pt-5 pb-4 border-b border-slate-100">
+        <div className="px-5 pt-5 pb-4 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-md">
-              <LayoutTemplate className="w-4.5 h-4.5 text-white" style={{ width: 18, height: 18 }} />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-md shrink-0">
+              <LayoutTemplate style={{ width: 18, height: 18 }} className="text-white" />
             </div>
             <div>
               <h1 className="text-base font-black text-slate-900 leading-tight">{APP_NAME}</h1>
@@ -214,14 +219,13 @@ export default function App() {
         </div>
 
         {/* Scrollable form */}
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-0.5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-0.5 custom-scrollbar min-h-0">
 
           {/* Design section */}
           <div>
             <SectionHeader icon={Palette} title="Design" open={openSections.design} onToggle={() => toggle('design')} />
             {openSections.design && (
               <div className="pb-4 space-y-4">
-                {/* Template */}
                 <div className="space-y-2">
                   <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Template</p>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -241,7 +245,6 @@ export default function App() {
                     ))}
                   </div>
                 </div>
-                {/* Color */}
                 <div className="space-y-2">
                   <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Palette className="w-3 h-3" /> Theme Color
@@ -274,18 +277,8 @@ export default function App() {
               <div className="pb-4 space-y-3">
                 <FieldInput label="School / University Name" name="schoolName" value={data.schoolName} onChange={handleChange} />
                 <FieldInput label="School Address" name="schoolAddress" value={data.schoolAddress} onChange={handleChange} type="textarea" />
-                <UploadZone
-                  label="School Logo"
-                  previewSrc={data.logoUrl}
-                  previewClass="w-10 h-10 rounded-lg"
-                  onUpload={handleImageUpload('logoUrl')}
-                />
-                <UploadZone
-                  label="Authorized Signature"
-                  previewSrc={data.signatureUrl}
-                  previewClass="h-10 w-auto max-w-[80px] rounded-lg bg-white px-1"
-                  onUpload={handleImageUpload('signatureUrl')}
-                />
+                <UploadZone label="School Logo" previewSrc={data.logoUrl} previewClass="w-10 h-10 rounded-lg" onUpload={handleImageUpload('logoUrl')} />
+                <UploadZone label="Authorized Signature" previewSrc={data.signatureUrl} previewClass="h-10 w-auto max-w-[80px] rounded-lg bg-white px-1" onUpload={handleImageUpload('signatureUrl')} />
               </div>
             )}
             <div className="border-b border-slate-100" />
@@ -303,12 +296,7 @@ export default function App() {
                   <FieldInput label="Blood Group" name="bloodGroup" value={data.bloodGroup} onChange={handleChange} />
                 </div>
                 <FieldInput label="Date of Birth" name="dob" type="date" value={data.dob} onChange={handleChange} />
-                <UploadZone
-                  label="Student Photo"
-                  previewSrc={data.photoUrl}
-                  previewClass="w-10 h-14 rounded-lg"
-                  onUpload={handleImageUpload('photoUrl')}
-                />
+                <UploadZone label="Student Photo" previewSrc={data.photoUrl} previewClass="w-10 h-14 rounded-lg" onUpload={handleImageUpload('photoUrl')} />
               </div>
             )}
             <div className="border-b border-slate-100" />
@@ -331,15 +319,12 @@ export default function App() {
 
         </div>
 
-        {/* Download footer */}
-        <div className="p-4 border-t border-slate-100 bg-white">
+        {/* Download footer — pb-16 on mobile to clear the fixed tab bar */}
+        <div className="p-4 pb-[calc(1rem+env(safe-area-inset-bottom)+56px)] lg:pb-4 border-t border-slate-100 bg-white shrink-0">
           <button
             onClick={downloadCard}
             className="w-full py-3 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-95 shadow-lg"
-            style={{
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              boxShadow: '0 8px 24px -8px rgba(99,102,241,0.5)',
-            }}
+            style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 8px 24px -8px rgba(99,102,241,0.5)' }}
           >
             <Download className="w-4 h-4" /> Download Both Sides
           </button>
@@ -348,19 +333,19 @@ export default function App() {
       </aside>
 
       {/* ── Preview Panel ── */}
-      <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden bg-slate-100">
+      <main className={`
+        flex-1 flex flex-col items-center justify-center relative overflow-hidden bg-slate-100 min-h-0
+        ${mobileTab === 'preview' ? 'flex' : 'hidden'} lg:flex
+      `}>
 
         {/* Dot grid */}
-        <div
-          className="absolute inset-0 opacity-50"
-          style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '22px 22px' }}
-        />
+        <div className="absolute inset-0 opacity-50" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
 
-        {/* Toolbar */}
-        <div className="relative z-10 flex items-center gap-2 mb-6">
+        {/* Front/Back toolbar */}
+        <div className="relative z-10 flex items-center gap-2 mb-4 shrink-0">
           <div className="bg-white rounded-full px-4 py-2 shadow-sm border border-slate-200 flex items-center gap-3">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Preview</span>
-            <div className="w-px h-4 bg-slate-200" />
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:block">Preview</span>
+            <div className="w-px h-4 bg-slate-200 hidden sm:block" />
             <button
               onClick={() => setShowBack(false)}
               className="text-xs font-bold px-2.5 py-1 rounded-lg transition-all"
@@ -376,53 +361,91 @@ export default function App() {
               Back
             </button>
             <div className="w-px h-4 bg-slate-200" />
-            <button
-              onClick={() => setShowBack((v) => !v)}
-              className="text-slate-400 hover:text-slate-600 transition-colors"
-              title="Flip card"
-            >
+            <button onClick={() => setShowBack((v) => !v)} className="text-slate-400 hover:text-slate-600 transition-colors" title="Flip card">
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* Cards row */}
-        <div className="relative z-10 flex flex-col sm:flex-row gap-6 md:gap-10 items-center justify-center w-full px-6">
+        {/* ── Mobile: single active card ── */}
+        <div className="lg:hidden relative z-10 flex flex-col items-center gap-3 w-full px-6">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-white px-3 py-1 rounded-full shadow-sm border border-slate-200">
+            {showBack ? 'Back' : 'Front'}
+          </span>
+          <div className={`rounded-xl overflow-hidden shrink-0 transition-all duration-300 ${showBack ? 'hidden' : 'block'}`}
+            style={{ width: 260, height: 400, boxShadow: '0 24px 50px -12px rgba(0,0,0,0.18)' }}>
+            <CardFront data={data} />
+          </div>
+          <div className={`rounded-xl overflow-hidden shrink-0 transition-all duration-300 ${!showBack ? 'hidden' : 'block'}`}
+            style={{ width: 260, height: 400, boxShadow: '0 24px 50px -12px rgba(0,0,0,0.18)' }}>
+            <CardBack data={data} />
+          </div>
+        </div>
 
+        {/* ── Desktop: both cards side by side ── */}
+        <div className="hidden lg:flex relative z-10 flex-row gap-10 items-center justify-center w-full px-6">
           {/* Front */}
           <div className={`flex flex-col items-center gap-3 transition-all duration-300 ${showBack ? 'opacity-40 scale-95' : 'opacity-100 scale-100'}`}>
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-white px-3 py-1 rounded-full shadow-sm border border-slate-200">Front</span>
             <div
-              ref={frontRef}
-              className="bg-white rounded-xl overflow-hidden w-[270px] sm:w-[310px] h-[420px] sm:h-[480px] relative shrink-0"
-              style={{ boxShadow: showBack ? '0 8px 30px -8px rgba(0,0,0,0.12)' : '0 24px 50px -12px rgba(0,0,0,0.18)' }}
+              className="bg-white rounded-xl overflow-hidden shrink-0"
+              style={{ width: 300, height: 460, boxShadow: showBack ? '0 8px 30px -8px rgba(0,0,0,0.12)' : '0 24px 50px -12px rgba(0,0,0,0.18)' }}
             >
               <CardFront data={data} />
             </div>
           </div>
-
           {/* Back */}
           <div className={`flex flex-col items-center gap-3 transition-all duration-300 ${!showBack ? 'opacity-40 scale-95' : 'opacity-100 scale-100'}`}>
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-white px-3 py-1 rounded-full shadow-sm border border-slate-200">Back</span>
             <div
-              ref={backRef}
-              className="bg-white rounded-xl overflow-hidden w-[270px] sm:w-[310px] h-[420px] sm:h-[480px] relative shrink-0"
-              style={{ boxShadow: !showBack ? '0 8px 30px -8px rgba(0,0,0,0.12)' : '0 24px 50px -12px rgba(0,0,0,0.18)' }}
+              className="bg-white rounded-xl overflow-hidden shrink-0"
+              style={{ width: 300, height: 460, boxShadow: !showBack ? '0 8px 30px -8px rgba(0,0,0,0.12)' : '0 24px 50px -12px rgba(0,0,0,0.18)' }}
             >
               <CardBack data={data} />
             </div>
           </div>
-
         </div>
 
         {/* Status bar */}
-        <div className="relative z-10 mt-8 flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-slate-200">
+        <div className="relative z-10 mt-5 shrink-0 flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-slate-200">
           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
           <span className="text-xs font-medium text-slate-600">Card ready to download</span>
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
         </div>
 
       </main>
+
+      {/* ── Off-screen download targets — always in DOM, never display:none ── */}
+      <div aria-hidden="true" style={{ position: 'fixed', left: '-9999px', top: 0, pointerEvents: 'none', zIndex: -1 }}>
+        <div ref={frontRef} style={{ width: 300, height: 460, overflow: 'hidden', borderRadius: 12, background: '#fff' }}>
+          <CardFront data={data} />
+        </div>
+        <div ref={backRef} style={{ width: 300, height: 460, overflow: 'hidden', borderRadius: 12, background: '#fff', marginTop: 20 }}>
+          <CardBack data={data} />
+        </div>
+      </div>
+
+      {/* ── Mobile bottom tab bar ── */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <button
+          onClick={() => setMobileTab('edit')}
+          className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
+          style={{ color: mobileTab === 'edit' ? data.themeColor : '#94a3b8' }}
+        >
+          <LayoutTemplate className="w-5 h-5" />
+          <span className="text-[10px] font-bold uppercase tracking-wider">Edit</span>
+        </button>
+        <div className="w-px bg-slate-100 my-2" />
+        <button
+          onClick={() => setMobileTab('preview')}
+          className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors"
+          style={{ color: mobileTab === 'preview' ? data.themeColor : '#94a3b8' }}
+        >
+          <User className="w-5 h-5" />
+          <span className="text-[10px] font-bold uppercase tracking-wider">Preview</span>
+        </button>
+      </nav>
+
     </div>
   );
 }
