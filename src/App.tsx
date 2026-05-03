@@ -452,30 +452,83 @@ function CardBack({ data }: { data: StudentData }) {
 // ─────────────────────────────────────────
 
 function ModernFront({ data }: { data: StudentData }) {
+  const hex = data.themeColor;
   return (
-    <div className="w-full h-full flex flex-col bg-white relative">
-      <div className="absolute top-0 w-full h-28 sm:h-36 rounded-b-[3rem] z-0" style={{ backgroundColor: data.themeColor }} />
-      <div className="relative z-10 flex flex-col items-center pt-4 sm:pt-6 px-4 sm:px-6 h-full">
-        <h2 className="text-white font-bold text-center text-[11px] sm:text-[13px] tracking-wide uppercase leading-tight mb-3 sm:mb-4 drop-shadow-md">
-          {data.schoolName}
-        </h2>
-        <div className="relative">
-          <img
-            src={data.photoUrl}
-            className="w-20 sm:w-28 h-20 sm:h-28 rounded-full border-[4px] sm:border-[5px] border-white shadow-lg object-cover bg-white"
-            crossOrigin="anonymous" alt="Student"
-          />
-          <div className="absolute bottom-0.5 sm:bottom-1 right-0.5 sm:right-1 w-5 sm:w-6 h-5 sm:h-6 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: data.themeColor }} />
+    <div className="w-full h-full flex flex-col bg-white relative overflow-hidden">
+
+      {/* Header background with decorative circles */}
+      <div className="absolute top-0 left-0 right-0 h-[175px]" style={{ background: `linear-gradient(135deg, ${hex}ee, ${hex}bb)` }}>
+        {/* decorative rings */}
+        <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full opacity-20 border-[20px] border-white" />
+        <div className="absolute top-4 -right-4 w-20 h-20 rounded-full opacity-10 border-[12px] border-white" />
+        <div className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full opacity-10 border-[16px] border-white" />
+        {/* wave divider */}
+        <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 400 28" preserveAspectRatio="none" style={{ height: 28 }}>
+          <path d="M0,0 C100,28 300,28 400,0 L400,28 L0,28 Z" fill="white" />
+        </svg>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center h-full">
+
+        {/* Logo + School name */}
+        <div className="flex items-center gap-2 pt-4 px-5 w-full justify-center">
+          <img src={data.logoUrl} crossOrigin="anonymous" alt="Logo" className="w-6 h-6 rounded-md object-contain bg-white/20 p-0.5" />
+          <p className="text-white text-[10px] font-bold uppercase tracking-widest leading-tight text-center drop-shadow-sm">
+            {data.schoolName}
+          </p>
         </div>
-        <div className="mt-4 sm:mt-5 text-center w-full">
-          <h1 className="text-xl sm:text-2xl font-black text-slate-800 leading-tight tracking-tight">{data.studentName}</h1>
-          <p className="text-[10px] sm:text-xs font-bold mt-1" style={{ color: data.themeColor }}>{data.program}</p>
+
+        {/* "STUDENT ID CARD" badge */}
+        <div className="mt-1 px-3 py-0.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+          <p className="text-white text-[8px] font-black uppercase tracking-[0.2em]">Student ID Card</p>
         </div>
-        <div className="w-full mt-auto mb-4 sm:mb-6 grid grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-2 sm:gap-x-3 text-left bg-slate-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100 shadow-sm">
-          <Detail label="ID Number" value={data.idNumber} />
-          <Detail label="D.O.B" value={data.dob} />
-          <Detail label="Blood Group" value={data.bloodGroup} />
-          <Detail label="Issued" value={data.issueDate} />
+
+        {/* Photo */}
+        <div className="mt-3 relative">
+          <div className="w-[84px] h-[84px] rounded-full p-1 bg-white shadow-xl">
+            <img
+              src={data.photoUrl} crossOrigin="anonymous" alt="Student"
+              className="w-full h-full rounded-full object-cover"
+            />
+          </div>
+          <div
+            className="absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center shadow-md"
+            style={{ backgroundColor: hex }}
+          >
+            <div className="w-2 h-2 rounded-full bg-white/80" />
+          </div>
+        </div>
+
+        {/* Name & program */}
+        <div className="mt-3 text-center px-4">
+          <h1 className="text-[17px] font-black text-slate-900 tracking-tight leading-none">{data.studentName}</h1>
+          <p className="text-[10px] font-bold mt-1 uppercase tracking-wider" style={{ color: hex }}>{data.program}</p>
+        </div>
+
+        {/* Divider */}
+        <div className="w-8 h-0.5 rounded-full mt-3 mx-auto" style={{ backgroundColor: hex }} />
+
+        {/* Info grid */}
+        <div className="w-full px-4 mt-3 grid grid-cols-2 gap-1.5">
+          {[
+            { label: 'ID Number', value: data.idNumber },
+            { label: 'Date of Birth', value: data.dob },
+            { label: 'Blood Group', value: data.bloodGroup },
+            { label: 'Issue Date', value: data.issueDate },
+          ].map(({ label, value }) => (
+            <div key={label} className="rounded-xl p-2.5 border" style={{ backgroundColor: `${hex}08`, borderColor: `${hex}20` }}>
+              <p className="text-[8px] font-black uppercase tracking-wider mb-0.5" style={{ color: `${hex}99` }}>{label}</p>
+              <p className="text-[10px] font-black text-slate-800 truncate">{value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Validity strip */}
+        <div className="mt-auto mb-4 w-full px-4 flex items-center justify-between">
+          <div className="h-px flex-1 bg-slate-100" />
+          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest px-2">Valid thru {data.expiryDate}</p>
+          <div className="h-px flex-1 bg-slate-100" />
         </div>
       </div>
     </div>
@@ -483,40 +536,67 @@ function ModernFront({ data }: { data: StudentData }) {
 }
 
 function ModernBack({ data }: { data: StudentData }) {
+  const hex = data.themeColor;
   return (
-    <div className="w-full h-full flex flex-col bg-white relative p-4 sm:p-6 text-center">
-      <div className="absolute top-0 left-0 w-full h-2.5 sm:h-3" style={{ backgroundColor: data.themeColor }} />
-      <div className="flex-grow flex flex-col items-center justify-center space-y-4 sm:space-y-6 mt-3 sm:mt-4">
-        <div className="w-full bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100">
-          <h3 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Emergency Contact</h3>
-          <p className="text-xs sm:text-sm font-bold text-slate-800">{data.emergencyContact}</p>
+    <div className="w-full h-full flex flex-col bg-white relative overflow-hidden">
+
+      {/* Top accent bar */}
+      <div className="h-2.5 w-full" style={{ background: `linear-gradient(90deg, ${hex}, ${hex}88)` }} />
+
+      {/* Decorative background circle */}
+      <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full opacity-5" style={{ backgroundColor: hex, transform: 'translate(30%, 30%)' }} />
+
+      <div className="flex-1 flex flex-col p-5 pt-4">
+
+        {/* School header */}
+        <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+          <img src={data.logoUrl} crossOrigin="anonymous" alt="Logo" className="w-7 h-7 object-contain rounded-lg border border-slate-100 p-0.5" />
+          <div>
+            <p className="text-[9px] font-black text-slate-800 uppercase tracking-wide leading-tight">{data.schoolName}</p>
+            <p className="text-[7px] text-slate-400 font-medium mt-0.5">{data.schoolAddress}</p>
+          </div>
         </div>
-        <div className="w-full bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100">
-          <h3 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Residential Address</h3>
-          <p className="text-[10px] sm:text-xs font-medium text-slate-700 leading-relaxed">{data.address}</p>
+
+        {/* Info rows */}
+        <div className="mt-4 space-y-2.5 flex-1">
+          <InfoRow hex={hex} label="Emergency Contact" value={data.emergencyContact} />
+          <InfoRow hex={hex} label="Residential Address" value={data.address} />
+          <div className="mt-3 rounded-xl p-3 border border-dashed border-slate-200 bg-slate-50">
+            <p className="text-[7.5px] text-slate-500 leading-relaxed text-center">
+              This card is the property of <span className="font-black text-slate-700">{data.schoolName}</span>. If found, please return to the address above.
+            </p>
+          </div>
         </div>
-        <div className="w-full px-1 sm:px-2">
-          <p className="text-[8px] sm:text-[9px] text-slate-500 leading-relaxed">
-            This card is the property of <strong className="text-slate-700">{data.schoolName}</strong>. If found, please return to:
-          </p>
-          <p className="text-[9px] sm:text-[10px] font-bold text-slate-700 mt-1">{data.schoolAddress}</p>
-        </div>
-      </div>
-      <div className="mt-auto flex flex-col items-center pt-3 sm:pt-4 border-t border-slate-100">
-        <div className="flex justify-between w-full items-end mb-3 sm:mb-4 px-2 sm:px-4 gap-4">
-          <div className="flex flex-col items-center w-20 sm:w-24">
-            {data.signatureUrl && (
-              <img src={data.signatureUrl} className="h-6 sm:h-8 object-contain mb-1" crossOrigin="anonymous" alt="Signature" />
-            )}
-            <div className="w-full border-t border-slate-300 pt-1 text-center">
-              <p className="text-[6px] sm:text-[7px] font-bold text-slate-400 uppercase tracking-widest">Auth. Signature</p>
+
+        {/* Footer: signature + barcode + validity */}
+        <div className="mt-auto pt-3 border-t border-slate-100">
+          <div className="flex items-end justify-between gap-3">
+            <div className="flex flex-col w-28">
+              {data.signatureUrl && (
+                <img src={data.signatureUrl} crossOrigin="anonymous" alt="Signature" className="h-7 object-contain mb-1 self-start" />
+              )}
+              <div className="border-t border-slate-300 pt-1">
+                <p className="text-[7px] font-black text-slate-400 uppercase tracking-widest">Auth. Signature</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-end gap-1">
+              <Barcode value={data.idNumber || '000000'} height={24} width={1.1} displayValue={false} margin={0} background="transparent" lineColor="#1e293b" />
+              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Valid until {data.expiryDate}</p>
             </div>
           </div>
-          <div className="flex flex-col items-end">
-            <Barcode value={data.idNumber || '000000'} height={22} width={1.1} displayValue={false} margin={0} background="transparent" lineColor="#1e293b" />
-          </div>
         </div>
-        <p className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider">Valid until: {data.expiryDate}</p>
+      </div>
+    </div>
+  );
+}
+
+function InfoRow({ hex, label, value }: { hex: string; label: string; value: string }) {
+  return (
+    <div className="flex gap-2.5 items-start">
+      <div className="w-1 h-full min-h-[32px] rounded-full shrink-0 mt-0.5" style={{ backgroundColor: `${hex}50` }} />
+      <div>
+        <p className="text-[8px] font-black uppercase tracking-wider mb-0.5" style={{ color: `${hex}aa` }}>{label}</p>
+        <p className="text-[10px] font-bold text-slate-800 leading-tight">{value}</p>
       </div>
     </div>
   );
@@ -527,66 +607,156 @@ function ModernBack({ data }: { data: StudentData }) {
 // ─────────────────────────────────────────
 
 function ClassicFront({ data }: { data: StudentData }) {
+  const hex = data.themeColor;
   return (
-    <div className="w-full h-full flex flex-col bg-white border-[6px] sm:border-[8px]" style={{ borderColor: data.themeColor }}>
-      <div className="flex items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 border-b-2" style={{ borderColor: data.themeColor }}>
-        <img src={data.logoUrl} className="w-8 sm:w-10 h-8 sm:h-10 object-contain" crossOrigin="anonymous" alt="Logo" />
-        <h2 className="font-serif font-bold text-[11px] sm:text-sm leading-tight text-slate-900 uppercase tracking-wide text-center">{data.schoolName}</h2>
+    <div className="w-full h-full flex flex-col bg-white relative">
+
+      {/* Triple-stripe top */}
+      <div className="flex flex-col">
+        <div className="h-3" style={{ backgroundColor: hex }} />
+        <div className="h-1 opacity-40" style={{ backgroundColor: hex }} />
+        <div className="h-0.5 opacity-20" style={{ backgroundColor: hex }} />
       </div>
-      <div className="py-1 sm:py-1.5 text-center text-white text-[9px] sm:text-[10px] font-bold tracking-widest uppercase shadow-sm" style={{ backgroundColor: data.themeColor }}>
-        Student Identity Card
-      </div>
-      <div className="p-3 sm:p-5 flex flex-col h-full">
-        <div className="flex gap-3 sm:gap-4 mb-4 sm:mb-5">
-          <img src={data.photoUrl} className="w-[80px] sm:w-[100px] h-[100px] sm:h-[130px] object-cover border-2 border-slate-200 shadow-sm p-1 bg-white" crossOrigin="anonymous" alt="Student" />
-          <div className="flex flex-col justify-center space-y-2 sm:space-y-3 flex-1 overflow-hidden">
-            <Detail label="Name" value={data.studentName} />
-            <Detail label="Program" value={data.program} />
-            <Detail label="ID Number" value={data.idNumber} />
+
+      {/* School header */}
+      <div className="flex flex-col items-center pt-3 pb-2.5 px-5 border-b-2" style={{ borderColor: `${hex}30` }}>
+        <div className="flex items-center gap-3">
+          <img src={data.logoUrl} crossOrigin="anonymous" alt="Logo" className="w-11 h-11 object-contain rounded-xl border-2 p-0.5 bg-white shadow-sm" style={{ borderColor: `${hex}40` }} />
+          <div className="text-left">
+            <h2 className="font-black text-[12px] text-slate-900 uppercase tracking-wide leading-tight">{data.schoolName}</h2>
+            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{data.schoolAddress.split(',')[1]?.trim() || data.schoolAddress}</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 mt-auto bg-slate-50 p-3 sm:p-4 border border-slate-200 rounded-lg">
-          <Detail label="D.O.B" value={data.dob} />
-          <Detail label="Blood Group" value={data.bloodGroup} />
-          <Detail label="Issue Date" value={data.issueDate} />
-          <Detail label="Valid Thru" value={data.expiryDate} />
+        {/* STUDENT IDENTITY CARD ribbon */}
+        <div className="mt-2 px-4 py-0.5 rounded-sm text-white text-[8px] font-black uppercase tracking-[0.25em] shadow-sm" style={{ backgroundColor: hex }}>
+          ✦ Official Student Identity Card ✦
         </div>
+      </div>
+
+      {/* Body */}
+      <div className="p-4 flex gap-3 flex-1">
+        {/* Photo with official border */}
+        <div className="shrink-0">
+          <div className="p-1 border-2 shadow-sm" style={{ borderColor: `${hex}60` }}>
+            <img
+              src={data.photoUrl} crossOrigin="anonymous" alt="Student"
+              className="w-[85px] h-[110px] object-cover"
+            />
+          </div>
+          <p className="text-[7px] font-black text-center text-slate-400 uppercase tracking-widest mt-1">Photo</p>
+        </div>
+
+        {/* Details */}
+        <div className="flex flex-col justify-center gap-2 flex-1 overflow-hidden">
+          <ClassicField label="Full Name" value={data.studentName} hex={hex} />
+          <ClassicField label="Programme" value={data.program} hex={hex} />
+          <ClassicField label="ID Number" value={data.idNumber} hex={hex} accent />
+          <ClassicField label="Blood Group" value={data.bloodGroup} hex={hex} />
+        </div>
+      </div>
+
+      {/* Bottom info bar */}
+      <div className="mx-4 mb-4 rounded-lg border border-slate-100 bg-slate-50 overflow-hidden">
+        <div className="h-0.5 w-full" style={{ backgroundColor: `${hex}50` }} />
+        <div className="grid grid-cols-2 divide-x divide-slate-100">
+          <div className="px-3 py-2">
+            <p className="text-[7px] font-black text-slate-400 uppercase tracking-widest">Date of Birth</p>
+            <p className="text-[10px] font-black text-slate-800 mt-0.5">{data.dob}</p>
+          </div>
+          <div className="px-3 py-2">
+            <p className="text-[7px] font-black text-slate-400 uppercase tracking-widest">Valid Through</p>
+            <p className="text-[10px] font-black mt-0.5" style={{ color: hex }}>{data.expiryDate}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Triple-stripe bottom */}
+      <div className="flex flex-col mt-auto">
+        <div className="h-0.5 opacity-20" style={{ backgroundColor: hex }} />
+        <div className="h-1 opacity-40" style={{ backgroundColor: hex }} />
+        <div className="h-2.5" style={{ backgroundColor: hex }} />
+      </div>
+    </div>
+  );
+}
+
+function ClassicField({ label, value, hex, accent = false }: { label: string; value: string; hex: string; accent?: boolean }) {
+  return (
+    <div className="flex gap-2 items-start">
+      <div className="w-1 rounded-full h-full min-h-[28px] shrink-0 mt-0.5" style={{ backgroundColor: accent ? hex : `${hex}30` }} />
+      <div className="overflow-hidden">
+        <p className="text-[7.5px] font-black uppercase tracking-wider text-slate-400">{label}</p>
+        <p className={`text-[10px] leading-tight truncate mt-0.5 ${accent ? 'font-black' : 'font-bold'} text-slate-800`}>{value}</p>
       </div>
     </div>
   );
 }
 
 function ClassicBack({ data }: { data: StudentData }) {
+  const hex = data.themeColor;
   return (
-    <div className="w-full h-full flex flex-col bg-white border-[6px] sm:border-[8px] p-4 sm:p-6" style={{ borderColor: data.themeColor }}>
-      <div className="flex-grow flex flex-col space-y-4 sm:space-y-6 mt-2">
-        <div className="text-center">
-          <h3 className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase border-b border-slate-200 pb-1.5 mb-2 tracking-wider">Emergency Contact</h3>
-          <p className="text-xs sm:text-sm font-black text-slate-800">{data.emergencyContact}</p>
-        </div>
-        <div className="text-center">
-          <h3 className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase border-b border-slate-200 pb-1.5 mb-2 tracking-wider">Residential Address</h3>
-          <p className="text-[10px] sm:text-xs font-medium text-slate-700 leading-relaxed px-1 sm:px-2">{data.address}</p>
-        </div>
-        <div className="text-center mt-3 sm:mt-4 bg-slate-50 p-2 sm:p-3 rounded-lg border border-slate-100">
-          <p className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">If found, please return to:</p>
-          <p className="text-[9px] sm:text-[10px] font-bold text-slate-800 leading-relaxed">{data.schoolAddress}</p>
-        </div>
+    <div className="w-full h-full flex flex-col bg-white relative">
+
+      {/* Triple-stripe top */}
+      <div className="flex flex-col">
+        <div className="h-3" style={{ backgroundColor: hex }} />
+        <div className="h-1 opacity-40" style={{ backgroundColor: hex }} />
+        <div className="h-0.5 opacity-20" style={{ backgroundColor: hex }} />
       </div>
-      <div className="mt-auto flex flex-col items-center pt-3 sm:pt-4">
-        <div className="w-full flex justify-between items-center mb-3 sm:mb-5 gap-4">
-          <div className="w-32 sm:w-40 flex flex-col items-center">
-            {data.signatureUrl ? (
-              <img src={data.signatureUrl} className="h-8 sm:h-10 object-contain mb-1" crossOrigin="anonymous" alt="Signature" />
-            ) : (
-              <div className="h-8 sm:h-10 mb-1" />
+
+      <div className="flex-1 flex flex-col p-4 gap-3">
+
+        {/* Stamp-like title */}
+        <div className="flex items-center justify-center gap-2 border border-dashed border-slate-200 rounded-lg py-2">
+          <img src={data.logoUrl} crossOrigin="anonymous" alt="Logo" className="w-6 h-6 object-contain opacity-70" />
+          <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{data.schoolName}</p>
+        </div>
+
+        {/* Emergency */}
+        <div className="rounded-lg border border-slate-100 overflow-hidden">
+          <div className="px-3 py-1.5 text-[7px] font-black uppercase tracking-widest text-white" style={{ backgroundColor: hex }}>
+            Emergency Contact
+          </div>
+          <div className="px-3 py-2">
+            <p className="text-[11px] font-black text-slate-800">{data.emergencyContact}</p>
+          </div>
+        </div>
+
+        {/* Address */}
+        <div className="rounded-lg border border-slate-100 overflow-hidden">
+          <div className="px-3 py-1.5 text-[7px] font-black uppercase tracking-widest text-white" style={{ backgroundColor: hex }}>
+            Residential Address
+          </div>
+          <div className="px-3 py-2">
+            <p className="text-[9px] font-medium text-slate-700 leading-relaxed">{data.address}</p>
+          </div>
+        </div>
+
+        {/* Return to */}
+        <div className="rounded-lg bg-slate-50 border border-slate-100 px-3 py-2 text-center">
+          <p className="text-[7px] font-black uppercase tracking-widest text-slate-400 mb-1">If found, please return to:</p>
+          <p className="text-[9px] font-bold text-slate-700 leading-snug">{data.schoolAddress}</p>
+        </div>
+
+        {/* Signature + barcode */}
+        <div className="mt-auto flex items-end justify-between gap-3 pt-2 border-t border-slate-100">
+          <div className="flex flex-col w-28">
+            {data.signatureUrl && (
+              <img src={data.signatureUrl} crossOrigin="anonymous" alt="Signature" className="h-8 object-contain mb-1 self-start" />
             )}
-            <div className="w-full border-t-2 border-slate-800 pt-1 text-center">
-              <p className="text-[7px] sm:text-[8px] font-bold text-slate-500 uppercase tracking-widest">Authorized Signature</p>
+            <div className="border-t-2 pt-1" style={{ borderColor: hex }}>
+              <p className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Authorized Signature</p>
             </div>
           </div>
-          <Barcode value={data.idNumber || '000000'} height={25} width={1.3} fontSize={9} background="transparent" lineColor="#0f172a" />
+          <Barcode value={data.idNumber || '000000'} height={28} width={1.3} fontSize={8} background="transparent" lineColor="#0f172a" />
         </div>
+      </div>
+
+      {/* Triple-stripe bottom */}
+      <div className="flex flex-col mt-auto">
+        <div className="h-0.5 opacity-20" style={{ backgroundColor: hex }} />
+        <div className="h-1 opacity-40" style={{ backgroundColor: hex }} />
+        <div className="h-2.5" style={{ backgroundColor: hex }} />
       </div>
     </div>
   );
@@ -597,25 +767,62 @@ function ClassicBack({ data }: { data: StudentData }) {
 // ─────────────────────────────────────────
 
 function MinimalFront({ data }: { data: StudentData }) {
+  const hex = data.themeColor;
   return (
-    <div className="w-full h-full flex flex-col bg-white relative p-5 sm:p-7 pl-7 sm:pl-9">
-      <div className="absolute left-0 top-0 bottom-0 w-3.5 sm:w-4" style={{ backgroundColor: data.themeColor }} />
-      <div className="flex justify-between items-start mb-4 sm:mb-6">
-        <img src={data.logoUrl} className="w-10 sm:w-12 h-10 sm:h-12 object-contain grayscale opacity-90" crossOrigin="anonymous" alt="Logo" />
-        <div className="text-right">
-          <h2 className="font-black text-[11px] sm:text-[13px] text-slate-900 leading-tight uppercase max-w-[120px] sm:max-w-[150px]">{data.schoolName}</h2>
-          <p className="text-[8px] sm:text-[9px] font-bold text-slate-400 tracking-widest uppercase mt-1">Student</p>
+    <div className="w-full h-full flex flex-col bg-white relative overflow-hidden">
+
+      {/* Thick left accent */}
+      <div className="absolute left-0 top-0 bottom-0 w-[6px]" style={{ background: `linear-gradient(180deg, ${hex}, ${hex}66)` }} />
+
+      {/* Subtle diagonal watermark */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(135deg, ${hex} 0px, ${hex} 1px, transparent 1px, transparent 28px)`,
+        }}
+      />
+
+      <div className="flex flex-col h-full pl-6 pr-5 pt-5 pb-5 relative z-10">
+
+        {/* Header row: logo left, school right */}
+        <div className="flex items-start justify-between mb-4">
+          <img src={data.logoUrl} crossOrigin="anonymous" alt="Logo" className="w-10 h-10 object-contain rounded-xl border border-slate-100 p-0.5 shadow-sm" />
+          <div className="text-right max-w-[140px]">
+            <h2 className="font-black text-[11px] text-slate-900 leading-tight uppercase tracking-wide">{data.schoolName}</h2>
+            <div className="flex items-center justify-end gap-1 mt-1">
+              <div className="w-4 h-px" style={{ backgroundColor: hex }} />
+              <p className="text-[8px] font-bold text-slate-400 tracking-widest uppercase">Student</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <img src={data.photoUrl} className="w-full h-36 sm:h-44 object-cover rounded-xl sm:rounded-2xl mb-4 sm:mb-6 shadow-sm grayscale-[20%]" crossOrigin="anonymous" alt="Student" />
-      <div className="flex-grow flex flex-col">
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none mb-1.5 sm:mb-2">{data.studentName}</h1>
-        <p className="text-[10px] sm:text-xs font-bold mb-4 sm:mb-6 uppercase tracking-wider" style={{ color: data.themeColor }}>{data.program}</p>
-        <div className="grid grid-cols-2 gap-y-3 sm:gap-y-4 mt-auto">
-          <Detail label="ID No." value={data.idNumber} />
-          <Detail label="D.O.B" value={data.dob} />
-          <Detail label="Blood" value={data.bloodGroup} />
-          <Detail label="Exp." value={data.expiryDate} />
+
+        {/* Photo — full width, magazine style */}
+        <div className="relative w-full mb-3 rounded-xl overflow-hidden shadow-md" style={{ height: 140 }}>
+          <img src={data.photoUrl} crossOrigin="anonymous" alt="Student" className="w-full h-full object-cover object-top" />
+          {/* gradient overlay at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-12" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)' }} />
+        </div>
+
+        {/* Name & program */}
+        <h1 className="text-[22px] font-black text-slate-900 tracking-tight leading-none">{data.studentName}</h1>
+        <div className="flex items-center gap-2 mt-1 mb-3">
+          <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: hex }} />
+          <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: hex }}>{data.program}</p>
+        </div>
+
+        {/* Info row */}
+        <div className="mt-auto grid grid-cols-2 gap-x-3 gap-y-2.5 border-t border-slate-100 pt-3">
+          {[
+            { label: 'ID No.', value: data.idNumber },
+            { label: 'DOB', value: data.dob },
+            { label: 'Blood', value: data.bloodGroup },
+            { label: 'Expires', value: data.expiryDate },
+          ].map(({ label, value }) => (
+            <div key={label}>
+              <p className="text-[7.5px] font-black text-slate-400 uppercase tracking-widest">{label}</p>
+              <p className="text-[10px] font-black text-slate-800 mt-0.5">{value}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -623,37 +830,64 @@ function MinimalFront({ data }: { data: StudentData }) {
 }
 
 function MinimalBack({ data }: { data: StudentData }) {
+  const hex = data.themeColor;
   return (
-    <div className="w-full h-full flex flex-col bg-white relative p-5 sm:p-7 pl-7 sm:pl-9">
-      <div className="absolute left-0 top-0 bottom-0 w-3.5 sm:w-4" style={{ backgroundColor: data.themeColor }} />
-      <div className="flex-grow flex flex-col justify-center space-y-6 sm:space-y-8">
-        <div>
-          <p className="text-[8px] sm:text-[9px] text-slate-400 uppercase font-black tracking-widest mb-1">Emergency</p>
-          <p className="text-xs sm:text-sm font-black text-slate-800">{data.emergencyContact}</p>
+    <div className="w-full h-full flex flex-col bg-white relative overflow-hidden">
+
+      {/* Thick left accent */}
+      <div className="absolute left-0 top-0 bottom-0 w-[6px]" style={{ background: `linear-gradient(180deg, ${hex}, ${hex}66)` }} />
+
+      {/* Subtle diagonal watermark */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(135deg, ${hex} 0px, ${hex} 1px, transparent 1px, transparent 28px)`,
+        }}
+      />
+
+      <div className="flex flex-col h-full pl-6 pr-5 pt-5 pb-5 relative z-10">
+
+        {/* Monogram / school stamp */}
+        <div className="flex items-center gap-2 mb-5">
+          <img src={data.logoUrl} crossOrigin="anonymous" alt="Logo" className="w-7 h-7 object-contain opacity-60" />
+          <div className="h-px flex-1 bg-slate-100" />
+          <p className="text-[8px] font-black text-slate-300 uppercase tracking-[0.2em]">ID Back</p>
         </div>
-        <div>
-          <p className="text-[8px] sm:text-[9px] text-slate-400 uppercase font-black tracking-widest mb-1">Address</p>
-          <p className="text-[10px] sm:text-xs font-bold text-slate-600 leading-relaxed">{data.address}</p>
+
+        {/* Three data blocks */}
+        <div className="flex-1 flex flex-col justify-center gap-5">
+          <MinimalBlock hex={hex} label="Emergency" value={data.emergencyContact} large />
+          <MinimalBlock hex={hex} label="Address" value={data.address} />
+          <MinimalBlock hex={hex} label="Return To" value={data.schoolAddress} />
         </div>
-        <div>
-          <p className="text-[8px] sm:text-[9px] text-slate-400 uppercase font-black tracking-widest mb-1">Return To</p>
-          <p className="text-[10px] sm:text-xs font-bold text-slate-600 leading-relaxed">{data.schoolAddress}</p>
-        </div>
-      </div>
-      <div className="mt-auto pt-4 sm:pt-6 border-t-2 border-slate-100 flex justify-between items-end gap-4">
-        <div className="w-20 sm:w-24 flex flex-col">
-          {data.signatureUrl ? (
-            <img src={data.signatureUrl} className="h-6 sm:h-8 object-contain mb-1 self-start" crossOrigin="anonymous" alt="Signature" />
-          ) : (
-            <div className="h-6 sm:h-8 mb-1" />
-          )}
-          <div className="border-t-2 border-slate-300 pt-1">
-            <p className="text-[7px] sm:text-[8px] text-slate-400 uppercase font-black tracking-widest">Signature</p>
+
+        {/* Footer */}
+        <div className="mt-auto border-t-2 border-slate-100 pt-3 flex items-end justify-between gap-3">
+          <div className="flex flex-col w-24">
+            {data.signatureUrl && (
+              <img src={data.signatureUrl} crossOrigin="anonymous" alt="Signature" className="h-7 object-contain mb-1 self-start opacity-90" />
+            )}
+            <div className="border-t border-slate-300 pt-1">
+              <p className="text-[7px] font-black text-slate-400 uppercase tracking-widest">Signature</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-end">
+            <Barcode value={data.idNumber || '000000'} height={26} width={1.1} displayValue={false} margin={0} background="transparent" lineColor="#0f172a" />
+            <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest mt-1">Valid until {data.expiryDate}</p>
           </div>
         </div>
-        <div className="transform scale-75 origin-bottom-right">
-          <Barcode value={data.idNumber || '000000'} height={30} width={1.1} displayValue={false} margin={0} background="transparent" lineColor="#0f172a" />
-        </div>
+      </div>
+    </div>
+  );
+}
+
+function MinimalBlock({ hex, label, value, large = false }: { hex: string; label: string; value: string; large?: boolean }) {
+  return (
+    <div className="flex gap-3 items-start">
+      <div className="w-px h-full min-h-[24px] rounded-full shrink-0" style={{ backgroundColor: `${hex}60` }} />
+      <div>
+        <p className="text-[7.5px] font-black uppercase tracking-widest mb-0.5" style={{ color: `${hex}99` }}>{label}</p>
+        <p className={`font-black text-slate-800 leading-tight ${large ? 'text-[12px]' : 'text-[9px]'}`}>{value}</p>
       </div>
     </div>
   );
